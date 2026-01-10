@@ -1,0 +1,85 @@
+---
+title: "Homework 1"
+author: "CFRM 502"
+date: "Due Sunday, January 18 at 11:59pm"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+``` {r load-packages, include=FALSE}
+library(quantmod)
+library(PerformanceAnalytics)
+library(car)
+```
+
+# Problem 1
+
+Let $r(t_0, t_1)$ denote the log return of a given asset between times $t_0$ and $t_1$ and $r_t = r(t-1, t)$ (this is the same notation as we introduced in class).
+
+## Part a
+
+Show that 
+
+\begin{equation*}
+r(t_0, t_1) = \sum_{t = t_0 + 1}^{t_1}r_t.
+\end{equation*}
+
+## Part b
+
+The formula from part (a) tells us that the monthly log return for an asset is the sum of the daily log returns over all of the days in that month.  If we assume that each month has 21 trading days and that the returns on each of those days are i.i.d., then how are the mean and standard deviation of the monthly log returns related to the mean and standard deviation of the daily log returns?  
+
+## Part c
+
+Use the following code to obtain the daily and monthly closing prices for the iShares US Home Construction ETF (ITB) from January 1, 2010 until January 1, 2026.
+
+``` {r problem-1c}
+itb <- getSymbols("ITB", from="2010-01-01", to="2026-01-01", auto.assign=FALSE)
+itb.prices.daily <- itb$ITB.Adjusted
+itb.prices.monthly <- to.monthly(itb.prices.daily, OHLC=FALSE)
+```
+
+Calculate the daily and monthly returns from this data and then calculate the mean and standard deviation of each set of returns.  Do these match your predictions from part (b)?
+
+Make a QQ plot comparing the daily log returns to the standard normal reference distribution and make another QQ plot comparing the monthly log returns to the same reference distribution.  Do these data sets appear to come from a normal distribution?  Which one seems closer to a normal distribution?  Why do you think this is?
+
+# Problem 2
+
+Obtain the 30-year fixed rate mortgage average in the United States (MORTGAGE30US) from January 1, 1975 up to (but not including) January 1, 2026.  This data is available from FRED.
+
+## Part a
+
+Plot the 30-year fixed rate mortgage average over this time period.  Which week had the highest average mortgage rate?  Which week had the lowest?  (You can and should use the plot to confirm your answers, but the point of this problem is to write code to calculate these answers.)
+
+## Part b
+
+Calculate the change in average mortgage rates each week.  That is, for each week from the second week of 1975 to the last week of 2025, calculate the difference between the rate at the current week and the rate at the previous week.  Plot these differences.  Which week had the largest increase?  Which week had the largest decrease?  What was the average change?  (You can and should use the plot to confirm your answers, but the point of this problem is to write code to calculate these answers.)
+
+# Problem 3
+
+The following code simulates 100 i.i.d. samples of the random variable $X\sim N(1, 2^2)$, then calculates the kernel density estimate of the pdf of $X$ using a bandwidth of $b = 0.3$ and evaluates that estimated density at $x = 1.2$.  (In other words, `fx.estimate` is the approximation of $f_X(1.2)$.)
+
+``` {r problem-3}
+n.samples <- 100
+x <- rnorm(n.samples, mean=1, sd=2)
+x.dens <- density(x, bw=0.3, from=1.2, to=1.2, n=1)
+fx.estimate <- x.dens$y
+```
+
+## Part a
+
+Write code to repeat the process described above $10,000$ times.  That is, generate $10,000$ data sets, each with $100$ data points, and use each of those data points to approximate $f_X(1.2)$.  Calculate the average and standard deviation of these $10,000$ approximations with the functions `mean` and `sd`.  How do your estimates compare to the exact answer?  (The `dnorm` function will be useful.)
+
+## Part b
+
+Repeat part (a), but use a bandwidth of $b = 0.01$ instead.
+
+## Part c
+
+Repeat part (a), but use a bandwidth of $b = 10$ instead.
+
+## Part d
+
+Explain your results in terms of the bias-variance tradeoff we discussed in class.

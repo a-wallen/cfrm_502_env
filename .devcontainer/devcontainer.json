@@ -1,0 +1,52 @@
+{
+  "name": "CFRM R Environment",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "forwardPorts": [
+    8787,
+    4200
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "REditorSupport.r",
+        "mechatroner.rainbow-csv",
+        "quarto.quarto",
+        "tomoki1207.pdf"
+      ],
+      "settings": {
+        "r.rterm.linux": "/usr/local/bin/R",
+        "r.bracketedPaste": true,
+        "r.session.level": "Workspace",
+        // Tell VS Code to use the httpgd we installed in the Dockerfile
+        "r.plot.view": "httpgd",
+        // Configure the terminal environment
+        "terminal.integrated.env.linux": {
+          "R_LIBS_USER": "/usr/local/lib/R/site-library"
+        },
+        // Enable formatting on save for R files using 'styler'
+        "[r]": {
+          "editor.defaultFormatter": "REditorSupport.r",
+          "editor.formatOnSave": true,
+          "editor.wordWrap": "wordWrapColumn",
+          "editor.wordWrapColumn": 80
+        },
+        "[rmd]": {
+          "editor.defaultFormatter": "REditorSupport.r",
+          "editor.formatOnSave": true,
+          "editor.wordWrap": "wordWrapColumn",
+          "editor.wordWrapColumn": 80
+        },
+        "quarto.render.previewArgs": [
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "4200"
+        ]
+      }
+    }
+  },
+  "remoteUser": "root"
+}
